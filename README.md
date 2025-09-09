@@ -169,28 +169,15 @@ The Earthquake Prevention Analysis system is a comprehensive real-time seismic d
    - Navigate to **Resource groups** and click **"Create"**
    - Fill in the required details:
      - **Subscription:** Choose your Azure subscription
-     - **Resource group name:** `earthquake-analysis-rg`
+     - **Resource group name:** `EarthQuake_Resource_group`
      - **Region:** Select your preferred region (e.g., East US 2)
    - Click **"Review + create"** and then **"Create"**
+   ![](images/1_create_a_resouce_with_earthquake_name.png)
 
 ### Phase 2: Azure SQL Database Setup
+**
 
-#### 2.1 Create SQL Server via Azure Portal
-1. **Navigate to SQL servers**
-   - In the Azure portal, search for **"SQL servers"**
-   - Click **"Create"**
-
-2. **Configure SQL Server**
-   - **Subscription:** Select your subscription
-   - **Resource group:** `earthquake-analysis-rg`
-   - **Server name:** `earthquake-sql-server`
-   - **Location:** Same as resource group
-   - **Authentication method:** Use SQL authentication
-   - **Server admin login:** `sqladmin`
-   - **Password:** Create a secure password
-   - Click **"Review + create"** and then **"Create"**
-
-#### 2.2 Create SQL Database
+#### 2.1 Create SQL Database
 1. **Navigate to SQL databases**
    - Search for **"SQL databases"** in Azure portal
    - Click **"Create"**
@@ -199,9 +186,16 @@ The Earthquake Prevention Analysis system is a comprehensive real-time seismic d
    - **Subscription:** Select your subscription
    - **Resource group:** `earthquake-analysis-rg`
    - **Database name:** `earthquake-db`
+   - **Configure SQL Server**
+       - **Server name:** `earthquake-sql-server`
+       - **Location:** Same as resource group
+       - **Authentication method:** Use SQL authentication
+       - **Server admin login:** `sqladmin`
+       - **Password:** Create a secure password
    - **Server:** Select `earthquake-sql-server`
    - **Compute + storage:** Configure based on needs (Standard S2 recommended)
    - Click **"Review + create"** and then **"Create"**
+   ![](images/2_create_azure_sql_database.png)
 
 ### Phase 3: Azure Data Factory Setup
 
@@ -212,11 +206,12 @@ The Earthquake Prevention Analysis system is a comprehensive real-time seismic d
 
 2. **Configure Data Factory**
    - **Subscription:** Select your subscription
-   - **Resource group:** `earthquake-analysis-rg`
+   - **Resource group:** `EarthQuake_Resource_group`
    - **Region:** Same as resource group
-   - **Name:** `earthquake-adf`
+   - **Name:** `earthquake-prevention-adf`
    - **Version:** V2
    - Click **"Review + create"** and then **"Create"**
+   [](images/3_create_data_factory_for_earth_quake.png)
 
 ### Phase 4: Azure Synapse Analytics Setup
 
@@ -227,17 +222,19 @@ The Earthquake Prevention Analysis system is a comprehensive real-time seismic d
 
 2. **Configure Storage Account**
    - **Subscription:** Select your subscription
-   - **Resource group:** `earthquake-analysis-rg`
-   - **Storage account name:** `earthquakestorage`
+   - **Resource group:** `EarthQuake_Resource_group`
+   - **Storage account name:** `earthquakeadls`
    - **Region:** Same as resource group
    - **Performance:** Standard
    - **Redundancy:** LRS (Locally redundant storage)
    - Click **"Review + create"** and then **"Create"**
+   ![](images/4_createastorage_account_with_earthquake.png)
 
 #### 4.2 Create Synapse Workspace
 1. **Navigate to Azure Synapse Analytics**
    - Search for **"Azure Synapse Analytics"** in Azure portal
    - Click **"Create"**
+   ![](images/11_create_synpase_analystics_with_earthquake.png)
 
 2. **Configure Synapse Workspace**
    - **Subscription:** Select your subscription
@@ -249,6 +246,22 @@ The Earthquake Prevention Analysis system is a comprehensive real-time seismic d
    - **SQL administrator login:** `sqladmin`
    - **Password:** Use the same password as SQL Server
    - Click **"Review + create"** and then **"Create"**
+
+   - Navigate to **Data tab** in left side menu in Synapse Studio. Create a  **Serverless SQL Pool** as Shown.
+   ![](images/11_create_synpase_analystics_with_earthquake.png)
+   - upon the creation of SQL Pool. We need setup Storage Account with Synapse. Navigate to Storage 
+   Account IAM role assinment. 
+   - Add a **role assignment** with Manage Identity of Synpase Workspace
+   ![](images/12_add_role_assignment_with_synapse_analytics.png)
+   - add another **role assignment** with user for your default gmail account.
+   ![](images/13_addservice__pricipal.png)
+  
+
+2. **Ingest Data:**
+   - Load transformed data from the `silver` layer into Synapse.
+   - Navigate to **Develp** tab & create a new sql script. 
+   - start your Scripts to Create a External Table and Views on top of Synapse.Refer this !["synapse SQL Scripts"](synapse_analytics/) for creating a Credentials to access from adls, views and External Tables.
+   - Load the data into serving layer
 
 ## 🗄️ Star Schema Design for Earthquake Data
 
